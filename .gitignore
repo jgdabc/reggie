@@ -1,0 +1,6 @@
+# Project exclude paths
+/brand-demo/target/
+/jbrand-demo01/target/
+/jgdabc/tomcat-demo/target/
+/mav/mav_demo/target/
+/mybatis_demo-master/mybatis_demo-master/target/
