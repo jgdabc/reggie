@@ -25,6 +25,7 @@
                     <input name="username" type="text" id="username" style="margin-right: 65px">
                     <br>
                     <span id="username_err" class="err_msg" >${register_msg}</span>
+                    <span id="username_err_1" class = err_msg_1 style="display: none;color: red">用户名已经存在</span>
                 </td>
 
             </tr>
@@ -57,6 +58,45 @@
     </form>
 
 </div>
+<script>
+    //给用户名输入框绑定一个失去焦点的事件
+    document.getElementById("username").onblur = function ()
+
+    {
+        //
+
+        //发送ajax请求
+        //
+        var username = this.value;
+        //创建核心对象
+        var xhttp;
+        if(window.XMLHttpRequest)
+        {
+            xhttp = new XMLHttpRequest();
+        }else {
+            xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+    //    发送请求
+        xhttp.open("GET"," http://localhost:8080/brand-demo01/selectUserServlet?username="+username)
+        xhttp.send();
+
+        xhttp.onreadystatechange = function ()
+        {
+            if(this.readyState == 4 && this.status == 200)
+            {
+                // alert(this.responseText);
+                if(this.responseText=="false")
+                {
+                    // alert(this.responseText)
+                    document.getElementById("username_err_1").style.display='';
+                }else {
+                    document.getElementById("username_err_1").style.display='none';
+
+                }
+            }
+        };
+    }
+</script>
 
 <script>
     document.getElementById("changeImg").onclick = function () {

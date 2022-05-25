@@ -43,11 +43,17 @@
             <version>1.2</version>
 
         </dependency>
+
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
             <version>1.1.2</version>
 
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.62</version>
         </dependency>
 
 
@@ -60,6 +66,13 @@
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
+                <configuration>
+<!--                    <url>-->
+<!--                        http://localhost:80/brand-demo01/video.html-->
+<!--                    </url>-->
+                    <port>8080</port>
+
+                </configuration>
 
 
             </plugin>
