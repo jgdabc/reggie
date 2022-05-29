@@ -3,7 +3,7 @@ package com.jgdabc.web.servlet;
 import com.alibaba.fastjson.JSON;
 import com.jgdabc.pojo.Brand;
 import com.jgdabc.pojo.PageBean;
-import com.jgdabc.service.BrandService;
+
 import com.jgdabc.service.BrandService01;
 import com.jgdabc.service.impl.BrandServiceImpl;
 
@@ -37,8 +37,22 @@ public class BrandServlet extends BaseServlet {
         String params = br.readLine();
 //        转为对应的brand对象
         Brand brand = JSON.parseObject(params, Brand.class);
-        brandService01.add(brand);
-        resp.getWriter().write("success");
+        String brandName = brand.getBrandName();
+        Brand brand1 = brandService01.selectByBrandName(brandName);
+        if(brand1==null)
+        {
+            brandService01.add(brand);
+            resp.getWriter().write("success");
+        }
+        else
+        {
+            if (brand1.getBrandName().equals(brand.getBrandName())) {
+                resp.getWriter().write("failed");
+            }
+        }
+
+//        brandService01.add(brand);
+//        resp.getWriter().write("success");
     }
 
     public void deleteByIds(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -66,6 +80,7 @@ public class BrandServlet extends BaseServlet {
 
 
     }
+
     public void selectByPageAndCondition(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //
 //        转为json
@@ -83,7 +98,7 @@ public class BrandServlet extends BaseServlet {
         System.out.println(brand);
 
 
-        PageBean<Brand> pageBean = brandService01.selectByPageandCondition(currentPage, pageSize,brand);
+        PageBean<Brand> pageBean = brandService01.selectByPageandCondition(currentPage, pageSize, brand);
         String jsonString = JSON.toJSONString(pageBean);
 
 
@@ -91,5 +106,55 @@ public class BrandServlet extends BaseServlet {
         resp.getWriter().write(jsonString);
 
 
+    }
+
+    public void delete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        BufferedReader br = req.getReader();
+        String params = br.readLine();
+        System.out.println("我是" + params);
+        int id = Integer.parseInt(params);
+//        System.out.println(id);
+        brandService01.delete(id);
+
+
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
+
+    }
+
+    public void selectbyid(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        BufferedReader br = req.getReader();
+        String params = br.readLine();
+        System.out.println("我是" + params);
+        int id = Integer.parseInt(params);
+//        System.out.println(id);
+        Brand brand = brandService01.selectById(id);
+        System.out.println(brand);
+        String s = JSON.toJSONString(brand);
+
+
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write(s);
+
+    }
+
+    public void update(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        BufferedReader br = req.getReader();
+        String params = br.readLine();
+        Brand brand = JSON.parseObject(params, Brand.class);
+        brandService01.update(brand);
+
+        System.out.println("我是"+brand);
+//        System.out.println("我是" + params);
+
+
+//        System.out.println(brand);
+//        String s = JSON.toJSONString(brand);
+
+
+        resp.setContentType("text/json;charset=utf-8");
+//        resp.getWriter().write(s);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
     }
 }

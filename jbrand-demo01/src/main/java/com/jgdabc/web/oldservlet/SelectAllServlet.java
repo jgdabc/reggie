@@ -24,19 +24,19 @@ public class SelectAllServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Brand> brands = brandService01.selectAll();
-//        转为json
-        String jsonString = JSON.toJSONString(brands);
-
-        response.setContentType("text/json;charset=utf-8");
-        response.getWriter().write(jsonString);
+////        转为json
+//        String jsonString = JSON.toJSONString(brands);
+//
+//        response.setContentType("text/json;charset=utf-8");
+//        response.getWriter().write(jsonString);
 
 //        List<Brand> brands = service.selectAll();
-//        System.out.println(brands);
-////        存入request区域当中
-//        request.setAttribute("brands",brands);
-//
-////        转发到brand.jsp
-//        request.getRequestDispatcher("/brand.jsp").forward(request,response);
+        System.out.println(brands);
+//        存入request区域当中
+        request.setAttribute("brands",brands);
+
+//        转发到brand.jsp
+        request.getRequestDispatcher("/brand.jsp").forward(request,response);
 
 
 

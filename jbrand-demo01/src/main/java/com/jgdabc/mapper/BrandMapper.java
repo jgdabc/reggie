@@ -20,8 +20,8 @@ public interface BrandMapper {
     void delete(int id);
 
     void deleteByIds(@Param("ids") int[] ids);
-    @Select("select * from tb_brand limit #{begin},#{size}")
 
+    @Select("select * from tb_brand limit #{begin},#{size}")
     @ResultMap("brandResultMap")
     List<Brand>selectByPage(@Param("begin") int begin,@Param("size") int size);
     
@@ -30,4 +30,6 @@ public interface BrandMapper {
 
     List<Brand>selectByPageAndCondition(@Param("begin") int begin,@Param("size") int size,@Param("brand") Brand brand);
     int selectTotalCountByCondition(Brand brand);
+     @Select("select * from tb_brand where brandname = #{brandName}")
+     Brand selectByBrandName(String brandName);
 }

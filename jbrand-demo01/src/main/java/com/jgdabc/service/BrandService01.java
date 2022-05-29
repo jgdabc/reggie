@@ -12,7 +12,10 @@ public interface BrandService01 {
     void deleteByIds( int[] ids);
     PageBean<Brand>selectByPage(int currentPage,int pageSize);
     PageBean<Brand>selectByPageandCondition(int currentPage,int pageSize,Brand brand);
-
+    void delete(int id);
+    Brand selectById(int id);
+    void  update(Brand brand);
+    Brand selectByBrandName(String brandName);
 
 
 }

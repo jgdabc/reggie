@@ -97,4 +97,41 @@ public class BrandServiceImpl implements BrandService01 {
         return  pageBean;
 
     }
+
+    @Override
+    public void delete(int id) {
+        SqlSession sqlSession = factory.openSession();
+        BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+        mapper.delete(id);
+        sqlSession.commit();
+        sqlSession.close();
+    }
+
+    @Override
+    public Brand selectById(int id) {
+        SqlSession sqlSession = factory.openSession();
+        BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+        Brand brand = mapper.selectById(id);
+        sqlSession.close();
+        return brand;
+    }
+
+    @Override
+    public void update(Brand brand) {
+        SqlSession sqlSession = factory.openSession();
+        BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+        mapper.update(brand);
+        sqlSession.commit();
+        sqlSession.close();
+    }
+
+    @Override
+    public Brand selectByBrandName(String brandName) {
+        SqlSession sqlSession = factory.openSession();
+        BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+        Brand brand = mapper.selectByBrandName(brandName);
+        return brand;
+    }
+
+
 }

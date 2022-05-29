@@ -7,22 +7,18 @@
 <body>
 
 <div id="app">
-    <input name="username" v-model="username">
-    {{username}}
+   <div v-for="addr in addrs"></div>
+    {{ addr }}<br>
+</div>
+<hr>
+<div v-for="(addr,i) in addrs">
+    {{i+1}} {{addr}}<br>
 </div>
 <script src="js/vue.js"></script>
 <script type="application/javascript">
-    new Vue(
-        {
-            e1:"#app",
-            data:{
-            // return {
-            //     username:""
-            // }
-                username:"shabi"
-        }}
-
-    );
+</script>
+<script>
+    new Vue{}
 </script>
 
 
