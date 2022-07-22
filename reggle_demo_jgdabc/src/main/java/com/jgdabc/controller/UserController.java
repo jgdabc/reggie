@@ -1,6 +1,7 @@
 package com.jgdabc.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.jgdabc.common.BaseContext;
 import com.jgdabc.common.R_;
 import com.jgdabc.entity.User;
 import com.jgdabc.service.UserService;
@@ -72,25 +73,22 @@ public class UserController {
             LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
             userLambdaQueryWrapper.eq(User::getPhone, phone);
             User user = userService.getOne(userLambdaQueryWrapper);
-            if (user!=null)
-            {
-                session.setAttribute("user",user.getId());
+            if(user == null){
+                //判断当前手机号对应的用户是否为新用户，如果是新用户就自动完成注册
+                user = new User();
+                user.setPhone(phone);
+                user.setStatus(1);
+                userService.save(user);
             }
-//            session.setAttribute("user",user.getId());
-            if (user == null) {
-                User user1 = new User();
-                user1.setPhone(phone);
-                user1.setStatus(1);
-                userService.save(user1);
-                session.setAttribute("user",user1.getId());
-
-
-
-            }
+            session.setAttribute("user",user.getId());
 
             return R_.success(user);
 
-        }
+
+
+            }
+
+
         return R_.error("验证失败");
     }
 }

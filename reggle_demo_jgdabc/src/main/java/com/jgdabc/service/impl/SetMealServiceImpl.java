@@ -2,6 +2,7 @@ package com.jgdabc.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.jgdabc.common.CustomException;
 import com.jgdabc.dto.SetmealDto;
 import com.jgdabc.entity.Setmeal;
@@ -10,6 +11,7 @@ import com.jgdabc.mapper.SetMealMapper;
 import com.jgdabc.service.SetMealService;
 import com.jgdabc.service.SetmealDishService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,4 +62,42 @@ public class SetMealServiceImpl extends ServiceImpl<SetMealMapper, Setmeal> impl
         lambdaQueryWrapper.in(SetmealDish::getSetmealId,ids);
         setmealDishService.remove(lambdaQueryWrapper);
     }
+
+    @Override
+    public void updateSetmealStatusById(Integer status, List<Long> ids) {
+        LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.in(ids !=null,Setmeal::getId,ids);
+        List<Setmeal> list = this.list(queryWrapper);
+        for(Setmeal setmeal: list)
+        {
+            if(setmeal !=null)
+            {
+                setmeal.setStatus(status);
+                this.updateById(setmeal);
+            }
+
+        }
+
+    }
+
+    @Override
+    public SetmealDto getDate(Long id) {
+        Setmeal setmeal =this.getById(id);//根据id查询到套餐
+        SetmealDto setmealDto = new SetmealDto();
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(id!=null,SetmealDish::getSetmealId,id);//这里根据套餐id查询关联的菜品
+        if (setmeal!=null)//查询到的套餐不是空
+        {
+//            拷贝一下数据
+            BeanUtils.copyProperties(setmeal,setmealDto);//先将套餐的的数据字段拷贝到扩展的实体类
+            List<SetmealDish> list = setmealDishService.list(queryWrapper);//这是查询到的菜品数据
+            setmealDto.setSetmealDishes(list);//将菜品数据传过去
+            return setmealDto;
+        }
+
+        return null;
+    }
+
+
+
 }

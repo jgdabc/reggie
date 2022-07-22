@@ -34,6 +34,7 @@ public class LoginCheckFilter implements Filter {
                 "/common/**",
                 "/user/sendMsg",//移动端发送短信
                 "/user/login",//移动端登录
+                "/backend/plugins/axios/axios.min.map"
 
         };
         boolean check = check(urls, requestURI);//判断是否相同，如果和放行路径相同，就不会进行处理
@@ -56,13 +57,13 @@ public class LoginCheckFilter implements Filter {
             return;
         }
 //        移动端登录验证
-        Object user = request.getSession().getAttribute("user");
+        Long  user = (Long) request.getSession().getAttribute("user");
         if (user!=null)
         {
-            long userid = Thread.currentThread().getId();
-            log.info("当前线程的id为{}",userid);
-            log.info("用户已经登录，用户id为{}",userid);
-            BaseContext.setCurrentId((Long)userid);
+//            long userid = Thread.currentThread().getId();
+//            log.info("当前线程的id为{}",userid);
+//            log.info("用户已经登录，用户id为{}",userid);
+            BaseContext.setCurrentId(user);
             filterChain.doFilter(request,response);
             return;
         }

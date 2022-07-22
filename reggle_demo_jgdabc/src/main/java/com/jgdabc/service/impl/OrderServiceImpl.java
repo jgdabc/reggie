@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,10 +40,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
      * 用户下单
      * @param orders
      */
+
     @Transactional
     public void submit(Orders orders) {
         //获得当前用户id
+
+
         Long userId = BaseContext.getCurrentId();
+
 
         //查询当前用户的购物车数据
         LambdaQueryWrapper<ShoppingCart> wrapper = new LambdaQueryWrapper<>();
@@ -105,4 +110,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         //清空购物车数据
         shoppingCartService.remove(wrapper);
     }
+
+
 }

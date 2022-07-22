@@ -11,6 +11,8 @@ public interface SetMealService extends IService<Setmeal> {
     public void saveWithDish(SetmealDto setmealDto);
 // 删除套餐的时候将关联的菜品都删除掉
     public void removeWithDish(List<Long> ids);
+    void updateSetmealStatusById(Integer status,List<Long>id );
+    SetmealDto getDate(Long id);
 
 
 

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class ShoppingCartController {
     private ShoppingCartService shoppingCartService;
 //    添加购物车
     @PostMapping("/add")
-    public R_<ShoppingCart> add(@RequestBody ShoppingCart shoppingCart)
+    public R_<ShoppingCart> add(@RequestBody ShoppingCart shoppingCart, HttpSession session)
     {
         log.info("购物车数据{}",shoppingCart);
         //这只用户id指定是哪个用户的购物车数据
@@ -28,15 +29,16 @@ public class ShoppingCartController {
 //        如果已经存在就在原来的数量的基础上进行加一
 //        如果不存在，则添加到购物车，数量默认是一
 //        获得当前用户的id
-        Long currentId = BaseContext.getCurrentId();
+       Long userId = (Long) session.getAttribute("user");
+
 //        将这个id设置到购物车当中去
-        shoppingCart.setUserId(currentId);
+        shoppingCart.setUserId(userId);
 //        查询当前菜品或者套餐是否在购物车当中、
 //        还需要判断当前添加的是套餐还是菜品
         Long dishId = shoppingCart.getDishId();
         LambdaQueryWrapper<ShoppingCart> shoppingCartLambdaQueryWrapper = new LambdaQueryWrapper<>();
 //        添加用户条件
-        shoppingCartLambdaQueryWrapper.eq(ShoppingCart::getUserId,currentId);
+        shoppingCartLambdaQueryWrapper.eq(ShoppingCart::getUserId,userId);
         if(dishId!=null)
         {
 //            添加的是菜品
@@ -65,11 +67,13 @@ public class ShoppingCartController {
     }
 //    查看购物车
     @GetMapping("/list")
-    public R_<List<ShoppingCart>> list()
+    public R_<List<ShoppingCart>> list(HttpSession session)
     {
-        log.info("查看购物车");
+        log.info("查看购物车:{}");
         LambdaQueryWrapper<ShoppingCart> shoppingCartLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        shoppingCartLambdaQueryWrapper.eq(ShoppingCart::getUserId,BaseContext.getCurrentId());
+
+        shoppingCartLambdaQueryWrapper.eq(ShoppingCart::getUserId,(Long)session.getAttribute("user"));
+
         shoppingCartLambdaQueryWrapper.orderByAsc(ShoppingCart::getCreateTime);
         List<ShoppingCart> list = shoppingCartService.list(shoppingCartLambdaQueryWrapper);
 

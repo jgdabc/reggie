@@ -5,10 +5,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jgdabc.common.R_;
 import com.jgdabc.dto.SetmealDto;
 import com.jgdabc.entity.Category;
+import com.jgdabc.entity.Dish;
 import com.jgdabc.entity.Setmeal;
+import com.jgdabc.entity.SetmealDish;
 import com.jgdabc.service.CategoryService;
+import com.jgdabc.service.DishService;
 import com.jgdabc.service.SetMealService;
 import com.jgdabc.service.SetmealDishService;
+import com.mysql.cj.log.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,8 @@ import java.util.stream.Collectors;
 public class SetmealController {
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    DishService dishService;
     @Autowired
     private SetMealService setMealService;
     @Autowired
@@ -91,5 +97,51 @@ public class SetmealController {
         setmealLambdaQueryWrapper.eq(setmeal.getStatus()!=null,Setmeal::getStatus,setmeal.getStatus());
         List<Setmeal> list = setMealService.list(setmealLambdaQueryWrapper);
         return R_.success(list);
+    }
+//    自己实现的功能
+//    对菜品停售卖或者起卖
+    @PostMapping("/status/{status}")
+    public R_<String> status(@PathVariable("status") Integer status,@RequestParam List<Long> ids){
+        log.info("status:{}",status);
+        log.info("ids:{}",ids);
+        setMealService.updateSetmealStatusById(status,ids);
+        return R_.success("操作成功");
+
+
+
+    }
+    /*这里主要做一个数据回显*/
+    @GetMapping("/{id}")
+    public R_<SetmealDto> getData(@PathVariable Long id)
+    {
+        SetmealDto setmealDto = setMealService.getDate(id);
+        return  R_.success(setmealDto);
+    }
+    @PutMapping
+    public R_<String> edit(@RequestBody SetmealDto setmealDto)
+    {
+        if(setmealDto==null)
+        {
+            return  R_.error("请求异常");
+        }
+        if(setmealDto.getSetmealDishes()==null)
+        {
+            return R_.error("套餐没有菜品，请添加");
+        }
+        List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
+        Long setmealId = setmealDto.getId();
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId,setmealId);
+        setmealDishService.remove(queryWrapper);
+        //为setmeal_dish表填充相关的属性
+        for(SetmealDish setmealDish:setmealDishes)
+        {
+            setmealDish.setSetmealId(setmealId);//填充属性值
+        }
+        //批量把setmealDish保存到setmeal_dish表
+        setmealDishService.saveBatch(setmealDishes);//保存套餐关联菜品
+        setMealService.updateById(setmealDto);//保存套餐
+        return R_.success("套餐修改成功");
+
     }
 }

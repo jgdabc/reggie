@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class SetmealDto extends Setmeal {
 
-    private List<SetmealDish> setmealDishes;
+    private List<SetmealDish> setmealDishes; //菜品
 
-    private String categoryName;
+    private String categoryName;//分类
 }
