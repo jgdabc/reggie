@@ -3,7 +3,19 @@ server:
 spring:
   application:
 #    应用的名称，可选
-    name: reggie_take_out
+    name: reggie_demo_jgdabc
+  redis:
+    host: 123.56.4.32
+    port: 6379
+    database: 0 # 代表使用0号数据库，其实一共有16个
+    jedis:
+      pool:
+        max-active: 8 #最大连接数
+        max-wait: 1ms #最大阻塞等待时间
+        max-idle: 4 #连接持的最大空闲时间
+        min-idle: 0 #连接池的最小空闲连接
+    password: 123456
+  #    password: #本地没有设置密码验证
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver

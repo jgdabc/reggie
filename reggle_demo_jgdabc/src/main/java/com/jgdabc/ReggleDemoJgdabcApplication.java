@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.client.RestTemplate;
 
 @EnableTransactionManagement
 @Slf4j
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 Servlet、Filter、Listener可以直接通过@WebServlet、@WebFilter、@WebListener注解自动注册，无需其他代码。
  */
 @ServletComponentScan
+
 public class ReggleDemoJgdabcApplication {
 
     public static void main(String[] args) {
@@ -22,5 +25,6 @@ public class ReggleDemoJgdabcApplication {
 
         SpringApplication.run(ReggleDemoJgdabcApplication.class, args);
     }
+
 
 }
